@@ -3,11 +3,14 @@ import calmet_db
 from calmet_db import JST
 from calendar_api_service import build_service
 
-def get_journal(db, year):
-    journal = db.get_journal(year)
-
+def get_today():
     now = datetime.datetime.now()
-    today = datetime.datetime(now.year, now.month, now.day, tzinfo=JST())
+    return datetime.datetime(now.year, now.month, now.day, tzinfo=JST())
+
+def get_journal(db, year):
+    journal = db.load_journal(year)
+
+    today = get_today()
 
     if journal == None:
         first = datetime.datetime(year, 1, 1, 0, 0, 0, tzinfo=JST())
@@ -16,8 +19,8 @@ def get_journal(db, year):
 
     return journal
 
-def fetch_events(calendar_id, first):
-    timeMax = datetime.datetime(first.year, 12, 31, 23, 59, 59, tzinfo=JST()).isoformat()
+def fetch_events(calendar_id, last):
+    timeMax = datetime.datetime(last.year, 12, 31, 23, 59, 59, tzinfo=JST()).isoformat()
 
     service = build_service()
 
@@ -31,7 +34,7 @@ def fetch_events(calendar_id, first):
     while True:
         res = service.events().list(
             calendarId=calendar_id,
-            timeMin=first.isoformat(),
+            timeMin=last.isoformat(),
             timeMax=timeMax,
             singleEvents=True,
             orderBy='startTime',
@@ -65,13 +68,18 @@ def fetch_cmd(args):
     journal = get_journal(db, year)
 
     # fetch events
-    events = fetch_events(calendar_id, journal.first)
+    events = fetch_events(calendar_id, journal.last)
 
-    # save events
-    calmet_db.set_events()
+    # save
+    db.save_events(year, events)
+
+    if len(events) > 0:
+        journal.updated = get_today()
+        journal.last =  events[-1].start
+        db.save_journal(journal)
 
     for e in events:
-        print(e.event_name, e.minutes)
+        print(e.name, e.minutes)
 
     # cleanup
     db.close()

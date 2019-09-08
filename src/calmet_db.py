@@ -1,4 +1,5 @@
 import datetime
+import json
 import sqlite3
 
 class JST(datetime.tzinfo):
@@ -22,9 +23,10 @@ class Journal:
         self.api_ver = 'v3'
 
 class Event:
+    id = None
     calendar_id = None
     calendar_name = None
-    event_name = None
+    name = None
     description = None
     start = None
     end = None
@@ -34,6 +36,7 @@ class Event:
     @staticmethod
     def from_api_result_item(calendar_id, calendar_name, item):
         return Event(
+            item['id'],
             calendar_id,
             calendar_name,
             item.get('summary', ''),
@@ -42,10 +45,11 @@ class Event:
             datetime.datetime.fromisoformat(item['end']['dateTime']),
             item)
 
-    def __init__(self, calendar_id, calendar_name, event_name, description, start, end, raw):
+    def __init__(self, id, calendar_id, calendar_name, event_name, description, start, end, raw):
+        self.id = id
         self.calendar_id = calendar_id
         self.calendar_name = calendar_name
-        self.event_name = event_name
+        self.name = event_name
         self.description = description
         self.start = start
         self.end = end
@@ -72,7 +76,7 @@ class CalMetDB:
     def close(self):
         self.connection.close()
 
-    def get_journal(self, year):
+    def load_journal(self, year):
         self.connection.execute(
             f'SELECT * from journal WHERE year = {year}')
 
@@ -84,19 +88,49 @@ class CalMetDB:
                 datetime.datetime.fromisoformat(j.updated),
                 datetime.datetime.fromisoformat(j.first),
                 datetime.datetime.fromisoformat(j.last),
-                j.app_ver)
+                j.api_ver)
         else:
             return None
 
-    def set_journal(self, journal:Journal):
+    def save_journal(self, journal:Journal):
         self.connection.execute(
             f'INSERT OR REPLACE INTO journal VALUES('
             f'  {journal.year},'
-            f'  {journal.updated.isoformat()},'
-            f'  {journal.first.isoformat()},'
-            f'  {journal.last.isoformat()},'
-            f'  {journal.app_ver}'
+            f'  "{journal.updated.isoformat()}",'
+            f'  "{journal.first.isoformat()}",'
+            f'  "{journal.last.isoformat()}",'
+            f'  "{journal.api_ver}"'
             f')')
 
         self.connection.commit()
 
+    def save_events(self, year, events):
+        # create table
+        self.connection.execute(
+            f'CREATE TABLE IF NOT EXISTS events_{year} ('
+            f'  id TEXT NOT NULL PRIMARY KEY,'
+            f'  calendar_id TEXT NOT NULL,'
+            f'  calendar_name TEXT NOT NULL,'
+            f'  name TEXT NOT NULL,'
+            f'  description TEXT NOT NULL,'
+            f'  start TEXT NOT NULL,'
+            f'  end TEXT NOT NULL,'
+            f'  minutes INTEGER NOT NULL,'
+            f'  raw TEXT NOT NULL'
+            f')')
+
+        for e in events:
+            self.connection.execute(
+                f'INSERT OR REPLACE INTO events_{year} VALUES('
+                f'  "{e.id}",'
+                f'  "{e.calendar_id}",'
+                f'  "{e.calendar_name}",'
+                f'  "{e.name}",'
+                f'  \'{e.description}\','
+                f'  "{e.start.isoformat()}",'
+                f'  "{e.end.isoformat()}",'
+                f'  {e.minutes},'
+                f'  \'{json.dumps(e.raw)}\''
+                f')')
+
+        self.connection.commit()

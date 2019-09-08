@@ -50,7 +50,7 @@ DB
 | id            | INTEGER | プライマリキー。Calendar APIが返すeventのID | abcdefghijklmnopqrstuvwxyz                           |
 | calendar_id   | TEXT    | カレンダーのID                              | abcdefghijklmnopqrstuvwxyz@group.calendar.google.com |
 | calendar_name | TEXT    | カレンダーの名前                            | 01-勉強記録                                          |
-| event_name    | TEXT    | イベント名                                  | 『Software Design』                                  |
+| name          | TEXT    | イベント名                                  | 『Software Design』                                  |
 | description   | TEXT    | イベントの説明文                            | vol:201909\nread:20                                  |
 | start         | TEXT    | 開始日時。ISO8601形式                       | 2019-09-07T20:00:00.000+09:00                        |
 | end           | TEXT    | 終了日時。ISO8601形式                       | 2019-09-07T21:00:00.00+09:00                         |
