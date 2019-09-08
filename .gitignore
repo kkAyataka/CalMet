@@ -1,0 +1,14 @@
+# app
+credentials.json
+calmet.db
+token.pickle
+
+# VS code
+.vscode
+
+# python
+pyvenv.cfg
+Include/
+Lib/
+Scripts/
+src/__pycache__
