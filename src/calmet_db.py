@@ -77,18 +77,19 @@ class CalMetDB:
         self.connection.close()
 
     def load_journal(self, year):
-        self.connection.execute(
+        cursor = self.connection.cursor()
+        cursor.execute(
             f'SELECT * from journal WHERE year = {year}')
 
-        j = self.connection.cursor().fetchone()
+        j = cursor.fetchone()
 
         if j != None:
             return Journal(
-                j.year,
-                datetime.datetime.fromisoformat(j.updated),
-                datetime.datetime.fromisoformat(j.first),
-                datetime.datetime.fromisoformat(j.last),
-                j.api_ver)
+                j[0],
+                datetime.datetime.fromisoformat(j[1]),
+                datetime.datetime.fromisoformat(j[2]),
+                datetime.datetime.fromisoformat(j[3]),
+                j[4])
         else:
             return None
 
@@ -134,3 +135,10 @@ class CalMetDB:
                 f')')
 
         self.connection.commit()
+
+    def get_metrics(self, year):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            f'SELECT name, SUM(minutes)/60.0 FROM events_{year} GROUP BY name')
+
+        return c.fetchall()

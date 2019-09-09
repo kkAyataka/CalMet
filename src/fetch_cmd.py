@@ -14,7 +14,7 @@ def get_journal(db, year):
 
     if journal == None:
         first = datetime.datetime(year, 1, 1, 0, 0, 0, tzinfo=JST())
-        last = datetime.datetime(year, 12, 31, 23, 59, 59, tzinfo=JST())
+        last = datetime.datetime(year, 1, 1, 0, 0, 0, tzinfo=JST())
         journal = calmet_db.Journal(year, today, first, last)
 
     return journal
