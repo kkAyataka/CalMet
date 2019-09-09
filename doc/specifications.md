@@ -11,8 +11,8 @@ Command
 |          コマンド          |                 説明                 |           例           |
 |:---------------------------|:-------------------------------------|:-----------------------|
 | fetch list                 | カレンダーの一覧を表示する           | calmet list            |
-| fetch [<options>] <year>   | データを取得してDBに保存する         | calmet fetch 2019      |
-| metrics [<options>] <year> | データのメトリクスを計算して出力する | calmet metrics -m 2019 |
+| fetch [\<options>] \<year>   | データを取得してDBに保存する         | calmet fetch 2019      |
+| metrics [\<options>] \<year> | データのメトリクスを計算して出力する | calmet metrics -m 2019 |
 
 DB
 --------------------------------------------------------------------------------
