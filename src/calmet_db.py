@@ -136,9 +136,25 @@ class CalMetDB:
 
         self.connection.commit()
 
-    def get_metrics(self, year):
+    def get_per_week_metrics(self, year):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            f'SELECT strftime("%m-%d", start, "weekday 6", "-6 days"), SUM(minutes)/60.0'
+            f'  FROM events_{year} GROUP BY strftime("%W", start, "weekday 6")')
+
+        return cursor.fetchall()
+
+
+    def get_per_month_metrics(self, year):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            f'SELECT strftime("%m", start), SUM(minutes)/60.0 FROM events_{year} GROUP BY strftime("%m", start)')
+
+        return cursor.fetchall()
+
+    def get_per_name_metrics(self, year):
         cursor = self.connection.cursor()
         cursor.execute(
             f'SELECT name, SUM(minutes)/60.0 FROM events_{year} GROUP BY name')
 
-        return c.fetchall()
+        return cursor.fetchall()

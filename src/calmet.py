@@ -27,7 +27,7 @@ def def_cmd():
 
     # metrics
     metrics = subp.add_parser('metrics', help='calculate metrics data')
-    metrics.add_argument('-m', '--month', type=str, help="metrics unit")
+    metrics.add_argument('-t', '--type', type=str, help="week, month or name")
     metrics.add_argument('year', metavar="target year", type=int, help="target year")
     metrics.set_defaults(func=metrics_cmd)
 
