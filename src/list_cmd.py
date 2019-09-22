@@ -1,3 +1,8 @@
+# Copyright 2019 kkAyataka
+#
+# Distributed under the MIT License.
+# https://opensource.org/licenses/MIT
+
 import datetime
 from calendar_api_service import build_service
 

@@ -1,3 +1,7 @@
+# NOTE:
+# Code of this file is qurted from the official sample code.
+# https://developers.google.com/calendar/quickstart/python?hl=ja
+
 import argparse
 import datetime
 import pickle

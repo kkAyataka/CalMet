@@ -1,3 +1,8 @@
+# Copyright 2019 kkAyataka
+#
+# Distributed under the MIT License.
+# https://opensource.org/licenses/MIT
+
 import datetime
 import json
 import sqlite3
