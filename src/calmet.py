@@ -26,6 +26,7 @@ def def_cmd():
 
     # fetch
     fetch = subp.add_parser('fetch', help='fetch events data')
+    fetch.add_argument('--clean', action='store_true', help='Delete all fetched data')
     fetch.add_argument('calendar_id', metavar="calendar_id", type=str, help='calendar id')
     fetch.add_argument('year', metavar="year", type=int, help='target year')
     fetch.set_defaults(func=fetch_cmd)

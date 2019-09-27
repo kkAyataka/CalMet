@@ -62,12 +62,17 @@ def fetch_events(calendar_id, last):
 
 def fetch_cmd(args):
     # get args
+    does_clean = args.clean
     calendar_id = args.calendar_id
     year = args.year
 
     # initialize
     db = calmet_db.CalMetDB()
     db.open()
+
+    # cleanup
+    if does_clean:
+        db.clean_events(year)
 
     # get current db state
     journal = get_journal(db, year)
