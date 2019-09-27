@@ -110,6 +110,11 @@ class CalMetDB:
 
         self.connection.commit()
 
+    def clean_events(self, year):
+        self.connection.execute(f'DELETE FROM journal WHERE year={year}')
+        self.connection.execute(f'DROP TABLE IF EXISTS events_{year}')
+        self.connection.commit()
+
     def save_events(self, year, events):
         # create table
         self.connection.execute(
