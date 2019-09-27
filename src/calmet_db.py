@@ -7,6 +7,15 @@ import datetime
 import json
 import sqlite3
 
+def get_datetime(obj):
+    string = ''
+    if 'dateTime' in obj:
+        string = obj['dateTime']
+    elif 'date' in obj:
+        string = obj['date']
+
+    return datetime.datetime.fromisoformat(string)
+
 class JST(datetime.tzinfo):
     def utcoffset(self, dt):
         return datetime.timedelta(hours=+9)
@@ -46,8 +55,8 @@ class Event:
             calendar_name,
             item.get('summary', ''),
             item.get('description', ''),
-            datetime.datetime.fromisoformat(item['start']['dateTime']),
-            datetime.datetime.fromisoformat(item['end']['dateTime']),
+            get_datetime(item['start']),
+            get_datetime(item['end']),
             item)
 
     def __init__(self, id, calendar_id, calendar_name, event_name, description, start, end, raw):
