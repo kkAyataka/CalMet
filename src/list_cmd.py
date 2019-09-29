@@ -16,3 +16,4 @@ def list_cmd(args):
     for c in calendar_list:
         print(f'id: {c["id"]}, name: {c["summary"]}')
 
+    return calendar_list

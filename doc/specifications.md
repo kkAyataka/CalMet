@@ -9,7 +9,7 @@ Command
 |                  コマンド                   |                 説明                 |                          例                          |
 |:--------------------------------------------|:-------------------------------------|:-----------------------------------------------------|
 | list                                        | カレンダーの一覧を表示する           | calmet list                                          |
-| fetch [\<options>] [\<calendar_id>] \<year> | データを取得してDBに保存する         | calmet fetch calendar@group.calendar.google.com 2019 |
+| fetch [\<options>] \<year> | データを取得してDBに保存する         | calmet fetch calendar@group.calendar.google.com 2019 |
 | metrics [\<options>] \<year>                | データのメトリクスを計算して表示する | calmet metrics 2019                                  |
 
 
@@ -36,15 +36,16 @@ id: example@gmail.com, name: 予定
 
 #### --name=<calendar_name>
 
-カレンダーIDの代わりにカレンダー名によってカレンダーを指定する。`--name`オプションを指定した場合、
-`calendar_id`の指定は不要。
+カレンダー名によってカレンダーを指定する。同名のカレンダーが複数存在する場合は、
+はじめにマッチしたカレンダーのイベントを取得する。
 
-同名のカレンダーが複数存在する場合は、はじめにマッチしたカレンダーのイベントを取得する。
+idかnameのどちらかの指定が必要。
 
-#### calenar_id
+#### --id=calenar_id
 
-カレンダーのIDを指定する。指定したIDの指定した年のデータを保存する。
+IDによってカレンダーを指定する。指定したIDの指定した年のデータを保存する。
 
+idとnameの両方が指定された場合、idが優先される。
 
 ### metrics [\<options>] \<year>
 

@@ -5,6 +5,7 @@
 
 import datetime
 import calmet_db
+from list_cmd import list_cmd
 from calmet_db import JST
 from calendar_api_service import build_service
 
@@ -23,6 +24,15 @@ def get_journal(db, year):
         journal = calmet_db.Journal(year, today, first, last)
 
     return journal
+
+def get_id_from_name(name):
+    calendars = list_cmd(None)
+
+    for c in calendars:
+        if c['summary'] == name:
+            return c['id']
+
+    return None
 
 def fetch_events(calendar_id, last):
     timeMax = datetime.datetime(last.year, 12, 31, 23, 59, 59, tzinfo=JST()).isoformat()
@@ -63,6 +73,7 @@ def fetch_events(calendar_id, last):
 def fetch_cmd(args):
     # get args
     does_clean = args.clean
+    calendar_name = args.calendar_name
     calendar_id = args.calendar_id
     year = args.year
 
@@ -76,6 +87,13 @@ def fetch_cmd(args):
 
     # get current db state
     journal = get_journal(db, year)
+
+    if calendar_id == None:
+        calendar_id = get_id_from_name(calendar_name)
+
+    if calendar_id == None:
+        print(f'Cannot find "{calendar_name}" calendar')
+        return
 
     # fetch events
     events = fetch_events(calendar_id, journal.last)
