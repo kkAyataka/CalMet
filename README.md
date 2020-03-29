@@ -9,8 +9,8 @@ Build and Run
 
 1. Turn on the Google Calendar API by [Official Guide](https://developers.google.com/calendar/quickstart/python?hl=ja)
 2. Download credentials.json and locate at project root directory
-2. Install the Google Client Library
-    - `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+2. Install dependent libraries
+    - `pip install -r pip-requirements.txt`
 3. Run calmet
     - `python src/calmet.py list`
     - `python src/calmet.py fetch calendar@group.calendar.google.com 2019`
